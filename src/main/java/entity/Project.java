@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.List;
+
 public class Project {
     private final long id; // unique id
     private String name;
@@ -56,7 +58,7 @@ public class Project {
         palette.setColours(newColours);
     }
 
-    public void isEmpty() {
+    public boolean isEmpty() {
         return canvas.isEmpty();
     }
 }
