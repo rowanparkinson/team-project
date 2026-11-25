@@ -2,6 +2,9 @@ package use_case.publish_project;
 
 import entity.Project;
 
+/**
+ * The Publishing Project Interactor.
+ */
 public class PublishProjectInteractor implements PublishProjectInputBoundary {
     private final LocalDataAccessInterface localDataAccessObject;
     private final CommunityDataAccessInterface communityDataAccessObject;

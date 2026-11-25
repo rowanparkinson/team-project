@@ -1,5 +1,9 @@
 package interface_adapter.publish_project;
 
 public interface CanvasViewModelListener {
-    public void stateChanged();
+
+    /**
+     * The login state was updated.
+     */
+    void stateChanged();
 }

@@ -14,6 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * DAO for project data implemented using a File to fetch the data.
+ */
 public class SavedProjectsDataAccess implements LocalDataAccessInterface {
     private static final Path LOCAL_PROJECTS_CSV = Paths.get("local_data/projects.csv");
 
@@ -67,81 +70,23 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
                 String type = col[0];
 
                 if (type.equals("PROJECT")) {
-                    String id = col[1];
-                    String name = col[2];
-                    boolean isPublished = Boolean.parseBoolean(col[3]);
-
-                    project = new Project(id, name);
-                    if (isPublished && !project.getIsPublished()) {
-                        project.updateIsPublished();
-                    }
+                    project = getProjectRowInfo(col);
 
                 } else if (type.equals("CANVAS") && project != null) {
-                    int width = Integer.parseInt(col[1]);
-                    int height = Integer.parseInt(col[2]);
-                    String backgroundColor = col[3];
-                    project.setCanvas(new Canvas(width, height, backgroundColor));
+                    project.setCanvas(getCanvasRowInfo(col));
 
                 } else if (type.equals("PALETTE") && project != null) {
-                    ColourPalette palette = project.getPalette();
-                    palette.setName(col[1]);
-                    String baseColour = col[2];
-                    String schemeType = col[3];
-
-                    List<String> colours = new ArrayList<>();
-                    if (!col[4].isEmpty()) {
-                        String[] colourArray = col[4].split(";");
-                        colours.addAll(Arrays.asList(colourArray));
-                    }
-
-                    if (!baseColour.isEmpty() && !schemeType.isEmpty()) {
-                        palette.generate(baseColour, schemeType, colours);
-                    } else {
-                        palette.setColours(colours);
-                    }
+                    getPaletteRowInfo(project, col);
 
                 } else if (type.equals("DRAWING") && project != null) {
-                    String name = col[1];
-                    boolean visible = Boolean.parseBoolean(col[2]);
-                    int position = Integer.parseInt(col[3]);
-                    double transparency = Double.parseDouble(col[4]);
-
-                    currentDrawing = new Drawing(position, name);
-                    if (!visible) {
-                        currentDrawing.toggleLayer();
-                    }
-                    currentDrawing.adjustTransparency(transparency);
-                    project.getCanvas().addLayer(currentDrawing);
+                    currentDrawing = getDrawingRowInfo(col, project);
 
                 } else if (type.equals("STROKE") && currentDrawing != null) {
-                    String colour = col[1];
-                    double width = Double.parseDouble(col[2]);
-                    Stroke stroke = new Stroke(colour, width);
-
-                    if (!col[3].isEmpty()) {
-                        String[] pointPairs = col[3].split(";");
-                        for (String pair : pointPairs) {
-                            String[] xy = pair.split(":");
-                            double x = Double.parseDouble(xy[0]);
-                            double y = Double.parseDouble(xy[1]);
-                            stroke.addPoint(x, y);
-                        }
-                    }
+                    Stroke stroke = getStrokeRowInfo(col);
                     currentDrawing.addStroke(stroke);
 
                 } else if (type.equals("IMAGE") && project != null) {
-                    String name = col[1];
-                    boolean visible = Boolean.parseBoolean(col[2]);
-                    int position = Integer.parseInt(col[3]);
-                    double transparency = Double.parseDouble(col[4]);
-                    String imagePath = col[5];
-
-                    BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
-                    Image imageLayer = new Image(name, position, imagePath, bufferedImage);
-                    if (!visible) {
-                        imageLayer.toggleLayer();
-                    }
-                    imageLayer.adjustTransparency(transparency);
+                    Image imageLayer = getImageRowInfo(col);
                     project.getCanvas().addLayer(imageLayer);
                 }
             }
@@ -150,5 +95,93 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
         }
 
         return project;
+    }
+
+    private static Project getProjectRowInfo(String[] col) {
+        Project project;
+        String id = col[1];
+        String name = col[2];
+        boolean isPublished = Boolean.parseBoolean(col[3]);
+
+        project = new Project(id, name);
+        if (isPublished && !project.getIsPublished()) {
+            project.updateIsPublished();
+        }
+        return project;
+    }
+
+    private static Canvas getCanvasRowInfo(String[] col) {
+        int width = Integer.parseInt(col[1]);
+        int height = Integer.parseInt(col[2]);
+        String backgroundColor = col[3];
+        return new Canvas(width, height, backgroundColor);
+    }
+
+    private static Image getImageRowInfo(String[] col) throws IOException {
+        String name = col[1];
+        boolean visible = Boolean.parseBoolean(col[2]);
+        int position = Integer.parseInt(col[3]);
+        double transparency = Double.parseDouble(col[4]);
+        String imagePath = col[5];
+
+        BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
+        Image imageLayer = new Image(name, position, imagePath, bufferedImage);
+        if (!visible) {
+            imageLayer.toggleLayer();
+        }
+        imageLayer.adjustTransparency(transparency);
+        return imageLayer;
+    }
+
+    private static void getPaletteRowInfo(Project project, String[] col) {
+        ColourPalette palette = project.getPalette();
+        palette.setName(col[1]);
+        String baseColour = col[2];
+        String schemeType = col[3];
+
+        List<String> colours = new ArrayList<>();
+        if (!col[4].isEmpty()) {
+            String[] colourArray = col[4].split(";");
+            colours.addAll(Arrays.asList(colourArray));
+        }
+
+        if (!baseColour.isEmpty() && !schemeType.isEmpty()) {
+            palette.generate(baseColour, schemeType, colours);
+        } else {
+            palette.setColours(colours);
+        }
+    }
+
+    private static Drawing getDrawingRowInfo(String[] col, Project project) {
+        Drawing currentDrawing;
+        String name = col[1];
+        boolean visible = Boolean.parseBoolean(col[2]);
+        int position = Integer.parseInt(col[3]);
+        double transparency = Double.parseDouble(col[4]);
+
+        currentDrawing = new Drawing(position, name);
+        if (!visible) {
+            currentDrawing.toggleLayer();
+        }
+        currentDrawing.adjustTransparency(transparency);
+        project.getCanvas().addLayer(currentDrawing);
+        return currentDrawing;
+    }
+
+    private static Stroke getStrokeRowInfo(String[] col) {
+        String colour = col[1];
+        double width = Double.parseDouble(col[2]);
+        Stroke stroke = new Stroke(colour, width);
+
+        if (!col[3].isEmpty()) {
+            String[] pointPairs = col[3].split(";");
+            for (String pair : pointPairs) {
+                String[] xy = pair.split(":");
+                double x = Double.parseDouble(xy[0]);
+                double y = Double.parseDouble(xy[1]);
+                stroke.addPoint(x, y);
+            }
+        }
+        return stroke;
     }
 }

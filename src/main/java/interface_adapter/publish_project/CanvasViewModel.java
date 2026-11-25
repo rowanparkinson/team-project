@@ -3,6 +3,9 @@ package interface_adapter.publish_project;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * View Model for canvas, shared with multiple use cases.
+ */
 public class CanvasViewModel {
     private final CanvasViewState canvasViewState;
     private final List<CanvasViewModelListener> listners = new ArrayList<>();

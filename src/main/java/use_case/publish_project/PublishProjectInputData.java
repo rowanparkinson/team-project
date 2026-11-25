@@ -1,5 +1,8 @@
 package use_case.publish_project;
 
+/**
+ * The Input Data for the Publish Project Use Case.
+ */
 public class PublishProjectInputData {
     private final String projectId;
     private final String name;

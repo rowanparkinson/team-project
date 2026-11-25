@@ -1,5 +1,8 @@
 package interface_adapter.publish_project;
 
+/**
+ * The state for the Canvas View Model.
+ */
 public class CanvasViewState {
     private String projectId;
     private String publishName;

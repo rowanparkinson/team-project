@@ -3,6 +3,9 @@ package interface_adapter.publish_project;
 import use_case.publish_project.PublishProjectOutputBoundary;
 import use_case.publish_project.PublishProjectOutputData;
 
+/**
+ * The Presenter for the Publish Project Use Case.
+ */
 public class PublishProjectPresenter implements PublishProjectOutputBoundary {
     private final CanvasViewModel viewModel;
 
