@@ -3,13 +3,13 @@ package entity;
 import java.util.List;
 
 public class Project {
-    private final long id; // unique id
+    private final String id; // unique id
     private String name;
     private boolean isPublished;
     private Canvas canvas;
     private ColourPalette palette;
 
-    public Project(long id, String name) {
+    public Project(String id, String name) {
         this.id = id;
         canvas = new Canvas();
         isPublished = false;
@@ -23,7 +23,7 @@ public class Project {
         }
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

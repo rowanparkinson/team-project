@@ -21,11 +21,11 @@ public class CommunitySaveDataAccess implements CommunityDataAccessInterface {
     private static final Path COMMUNITY_CSV = COMMUNITY_DIR.resolve("communitydata.csv");
 
     @Override
-    public void addToCommunity(Project project, long id, String name, String description) {
+    public void addToCommunity(Project project, String id, String name, String description) {
         writeData(project, id, name, description);
     }
 
-    private void writeData(Project project, long id, String name, String description) {
+    private void writeData(Project project, String id, String name, String description) {
         try {
             Files.createDirectories(COMMUNITY_DIR);
 

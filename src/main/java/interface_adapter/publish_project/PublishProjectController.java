@@ -10,7 +10,7 @@ public class PublishProjectController {
         this.publishProjectInputBoundary = publishProjectInputBoundary;
     }
 
-    public void execute(long projectId, String name, String description) {
+    public void execute(String projectId, String name, String description) {
         PublishProjectInputData inputData = new PublishProjectInputData(projectId, name, description);
         publishProjectInputBoundary.execute(inputData);
     }

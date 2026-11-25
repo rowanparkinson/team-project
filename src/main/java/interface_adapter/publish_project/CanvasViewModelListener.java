@@ -1,5 +1,5 @@
 package interface_adapter.publish_project;
 
-public interface ProjectViewModelListener {
+public interface CanvasViewModelListener {
     public void stateChanged();
 }

@@ -1,22 +1,22 @@
 package view;
 
-import interface_adapter.publish_project.ProjectViewModelListener;
+import interface_adapter.publish_project.CanvasViewModelListener;
 import interface_adapter.publish_project.PublishProjectController;
-import interface_adapter.publish_project.ProjectViewModel;
-import interface_adapter.publish_project.ProjectViewState;
+import interface_adapter.publish_project.CanvasViewModel;
+import interface_adapter.publish_project.CanvasViewState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ProjectView extends JPanel implements ProjectViewModelListener {
+public class CanvasView extends JPanel implements CanvasViewModelListener {
     private PublishProjectController publishProjectController;
-    private final ProjectViewModel projectViewModel;
+    private final CanvasViewModel canvasViewModel;
     private final JButton publishButton;
 
-    public ProjectView(ProjectViewModel projectViewModel) {
-        this.projectViewModel = projectViewModel;
-        this.projectViewModel.addListener(this);
+    public CanvasView(CanvasViewModel canvasViewModel) {
+        this.canvasViewModel = canvasViewModel;
+        this.canvasViewModel.addListener(this);
 
         final JLabel title = new JLabel("Project Screen");
 
@@ -27,7 +27,7 @@ public class ProjectView extends JPanel implements ProjectViewModelListener {
         publishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JTextField nameField = new JTextField(projectViewModel.getState().getName());
+                JTextField nameField = new JTextField(canvasViewModel.getState().getPublishName());
                 JTextArea descriptionArea = new JTextArea(4, 20);
                 descriptionArea.setLineWrap(true);
                 descriptionArea.setWrapStyleWord(true);
@@ -38,14 +38,14 @@ public class ProjectView extends JPanel implements ProjectViewModelListener {
                 };
 
                 int confirm = JOptionPane.showConfirmDialog(
-                        ProjectView.this,
+                        CanvasView.this,
                         text,
                         "Publish Project",
                         JOptionPane.OK_CANCEL_OPTION
                 );
 
                 if (confirm == JOptionPane.OK_OPTION) {
-                    final ProjectViewState state = projectViewModel.getState();
+                    final CanvasViewState state = canvasViewModel.getState();
                     final String publishName = nameField.getText();
                     final String publishDescription = descriptionArea.getText();
                     publishProjectController.execute(state.getProjectId(), publishName, publishDescription);
@@ -60,8 +60,8 @@ public class ProjectView extends JPanel implements ProjectViewModelListener {
     @Override
     public void stateChanged() {
         final String message;
-        ProjectViewState state = projectViewModel.getState();
-        JOptionPane.showMessageDialog(ProjectView.this, state.getMessage());
+        CanvasViewState state = canvasViewModel.getState();
+        JOptionPane.showMessageDialog(CanvasView.this, state.getPublishMessage());
     }
 
     public void setPublishProjectController(PublishProjectController publishProjectController) {

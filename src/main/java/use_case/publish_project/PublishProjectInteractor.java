@@ -37,11 +37,11 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
         }
     }
 
-    private Project getProject(long projectId) {
+    private Project getProject(String projectId) {
         return localDataAccessObject.findProject(projectId);
     }
 
-    private void publishProject(Project project, long id, String name, String description) {
+    private void publishProject(Project project, String id, String name, String description) {
         project.updateIsPublished();
         communityDataAccessObject.addToCommunity(project, id, name, description);
     }

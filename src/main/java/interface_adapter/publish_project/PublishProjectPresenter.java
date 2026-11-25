@@ -4,24 +4,24 @@ import use_case.publish_project.PublishProjectOutputBoundary;
 import use_case.publish_project.PublishProjectOutputData;
 
 public class PublishProjectPresenter implements PublishProjectOutputBoundary {
-    private final ProjectViewModel viewModel;
+    private final CanvasViewModel viewModel;
 
-    public PublishProjectPresenter(ProjectViewModel viewModel) {
+    public PublishProjectPresenter(CanvasViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     @Override
     public void prepareSuccessView(PublishProjectOutputData outputData) {
-        ProjectViewState state = viewModel.getState();
-        state.setName(outputData.getName());
-        state.setMessage(outputData.getName() + " has been published!");
-        viewModel.notifyChange();
+        CanvasViewState state = viewModel.getState();
+        state.setPublishName(outputData.getName());
+        state.setPublishMessage(outputData.getName() + " has been published!");
+        viewModel.notifyStateChanged();
     }
 
     @Override
     public void prepareFailView(String error) {
-        ProjectViewState state = viewModel.getState();
-        state.setMessage(error);
-        viewModel.notifyChange();
+        CanvasViewState state = viewModel.getState();
+        state.setPublishMessage(error);
+        viewModel.notifyStateChanged();
     }
 }

@@ -18,13 +18,13 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
     private static final Path LOCAL_PROJECTS_CSV = Paths.get("local_data/projects.csv");
 
     @Override
-    public Project findProject(long projectId) {
-        Map<Long, Project> projects = readData();
+    public Project findProject(String projectId) {
+        Map<String, Project> projects = readData();
         return projects.get(projectId);
     }
 
-    private Map<Long, Project> readData() {
-        Map<Long, Project> projects = new HashMap<>();
+    private Map<String, Project> readData() {
+        Map<String, Project> projects = new HashMap<>();
 
         if (!Files.exists(LOCAL_PROJECTS_CSV)) {
             return projects;
@@ -38,7 +38,7 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
                 }
 
                 String[] columns = line.split(",", -1);
-                long id = Long.parseLong(columns[0]);
+                String id = columns[0];
                 String projectFilePath = columns[2];
 
                 Project project = readProjectFromFile(projectFilePath);
@@ -67,7 +67,7 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
                 String type = col[0];
 
                 if (type.equals("PROJECT")) {
-                    long id = Long.parseLong(col[1]);
+                    String id = col[1];
                     String name = col[2];
                     boolean isPublished = Boolean.parseBoolean(col[3]);
 
