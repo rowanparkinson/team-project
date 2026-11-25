@@ -1,5 +1,7 @@
 package interface_adapter.publish_project;
 
+import interface_adapter.CanvasState;
+import interface_adapter.CanvasViewModel;
 import use_case.publish_project.PublishProjectOutputBoundary;
 import use_case.publish_project.PublishProjectOutputData;
 
@@ -15,7 +17,7 @@ public class PublishProjectPresenter implements PublishProjectOutputBoundary {
 
     @Override
     public void prepareSuccessView(PublishProjectOutputData outputData) {
-        CanvasViewState state = viewModel.getState();
+        CanvasState state = viewModel.getState();
         state.setPublishName(outputData.getName());
         state.setPublishMessage(outputData.getName() + " has been published!");
         viewModel.notifyStateChanged();
@@ -23,7 +25,7 @@ public class PublishProjectPresenter implements PublishProjectOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        CanvasViewState state = viewModel.getState();
+        CanvasState state = viewModel.getState();
         state.setPublishMessage(error);
         viewModel.notifyStateChanged();
     }

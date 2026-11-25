@@ -159,7 +159,7 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
         int position = Integer.parseInt(col[3]);
         double transparency = Double.parseDouble(col[4]);
 
-        currentDrawing = new Drawing(position, name);
+        currentDrawing = new Drawing(name, position);
         if (!visible) {
             currentDrawing.toggleLayer();
         }

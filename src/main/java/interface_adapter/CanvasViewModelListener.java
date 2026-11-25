@@ -1,4 +1,4 @@
-package interface_adapter.publish_project;
+package interface_adapter;
 
 public interface CanvasViewModelListener {
 

@@ -1,17 +1,21 @@
 package entity;
 
+import java.util.UUID;
+
 public abstract class Layer {
 
     private String name;
     private boolean visible;
     private int position;
     private double transparency;
+    private String id;
 
     public Layer(String name, int position) {
         this.name = name;
         this.visible = true;
         this.position = position;
         this.transparency = 1.0;
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getName() {
@@ -50,5 +54,9 @@ public abstract class Layer {
         }
 
         this.transparency = transparency;
+    }
+
+    public String getId() {
+        return id;
     }
 }
