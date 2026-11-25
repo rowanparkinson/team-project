@@ -15,8 +15,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class SavedProjectsDataAccess implements LocalDataAccessInterface {
-    private static final Path COMMUNITY_DIR = Paths.get("community_data", "published_projects");
-    private static final Path COMMUNITY_CSV = COMMUNITY_DIR.resolve("communitydata.csv");
+    private static final Path LOCAL_PROJECTS_CSV = Paths.get("local_data/projects.csv");
 
     @Override
     public Project findProject(long projectId) {
@@ -27,20 +26,20 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
     private Map<Long, Project> readData() {
         Map<Long, Project> projects = new HashMap<>();
 
-        // If nothing has been published yet, return an empty map
-        if (!Files.exists(COMMUNITY_CSV)) {
+        if (!Files.exists(LOCAL_PROJECTS_CSV)) {
             return projects;
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(COMMUNITY_CSV.toFile()))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(LOCAL_PROJECTS_CSV.toFile()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) {
                     continue;
                 }
+
                 String[] columns = line.split(",", -1);
                 long id = Long.parseLong(columns[0]);
-                String projectFilePath = columns[3];
+                String projectFilePath = columns[2];
 
                 Project project = readProjectFromFile(projectFilePath);
                 if (project != null) {
@@ -113,6 +112,7 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
                     }
                     currentDrawing.adjustTransparency(transparency);
                     project.getCanvas().addLayer(currentDrawing);
+
                 } else if (type.equals("STROKE") && currentDrawing != null) {
                     String colour = col[1];
                     double width = Double.parseDouble(col[2]);
@@ -128,6 +128,7 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
                         }
                     }
                     currentDrawing.addStroke(stroke);
+
                 } else if (type.equals("IMAGE") && project != null) {
                     String name = col[1];
                     boolean visible = Boolean.parseBoolean(col[2]);

@@ -50,6 +50,10 @@ public class Project {
         return canvas;
     }
 
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
     public ColourPalette getPalette() {
         return palette;
     }

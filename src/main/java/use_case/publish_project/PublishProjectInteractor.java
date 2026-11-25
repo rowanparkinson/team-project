@@ -15,7 +15,6 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
         this.publishProjectPresenter = publishProjectOutputBoundary;
     }
 
-    // TODO: Change Object into Project according to implementation of Use Case 10
     @Override
     public void execute(PublishProjectInputData inputData) {
         if (inputData.getName() == null || inputData.getName().isBlank()) {
@@ -23,8 +22,7 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
         } else if (inputData.getDescription() == null || inputData.getDescription().isBlank()) {
             publishProjectPresenter.prepareFailView("Description cannot be empty.");
         } else {
-            Object object = getProject(inputData.getId());
-            Project project = (Project) object;
+            Project project = getProject(inputData.getId());
 
             if (project == null) {
                 publishProjectPresenter.prepareFailView("No projects has been found in saved files.");
@@ -39,8 +37,7 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
         }
     }
 
-    // TODO: Change Object into Project according to implementation of Use Case 10
-    private Object getProject(long projectId) {
+    private Project getProject(long projectId) {
         return localDataAccessObject.findProject(projectId);
     }
 
