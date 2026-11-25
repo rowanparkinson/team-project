@@ -1,0 +1,131 @@
+package data_access;
+
+import entity.*;
+import use_case.publish_project.CommunityDataAccessInterface;
+
+import javax.imageio.ImageIO;
+import java.awt.geom.Point2D;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommunitySaveDataAccess implements CommunityDataAccessInterface {
+    private static final Path COMMUNITY_DIR = Paths.get("community_data", "published_projects");
+    private static final Path PROJECTS_DIR = Paths.get("community_data", "projects");
+    private static final Path IMAGES_DIR = Paths.get("community_data", "images");
+    private static final Path COMMUNITY_CSV = COMMUNITY_DIR.resolve("communitydata.csv");
+
+    @Override
+    public void addToCommunity(Project project, long id, String name, String description) {
+        writeData(project, id, name, description);
+    }
+
+    private void writeData(Project project, long id, String name, String description) {
+        try {
+            Files.createDirectories(COMMUNITY_DIR);
+
+            String projectFilePath = convertProjectToWriteable(project);
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(COMMUNITY_CSV.toFile(), true))) {
+                writer.write(id + "," + escapeCsv(name) + "," + escapeCsv(description) + "," + escapeCsv(projectFilePath));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String convertProjectToWriteable(Project project) {
+        Path projectPath = PROJECTS_DIR.resolve(project.getId() + ".csv");
+
+        try {
+            Files.createDirectories(PROJECTS_DIR);
+            Files.createDirectories(IMAGES_DIR);
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectPath.toFile(), false))) {
+                writer.write("PROJECT" + "," +
+                        project.getId() + ","
+                        + escapeCsv(project.getName()) + ","
+                        + project.getIsPublished());
+                writer.newLine();
+
+                Canvas canvas = project.getCanvas();
+                writer.write("CANVAS" + ","
+                        + canvas.getWidth() + ","
+                        + canvas.getHeight() + ","
+                        + canvas.getBackgroundColor());
+                writer.newLine();
+
+                ColourPalette palette = project.getPalette();
+                String baseColour = palette.getBaseColour() != null ? palette.getBaseColour() : "";
+                String schemeType = palette.getSchemeType() != null ? escapeCsv(palette.getSchemeType()) : "";
+                String colours = String.join(";", palette.getColours());
+                writer.write("PALETTE" + ","
+                        + escapeCsv(palette.getName())  + ","
+                        + baseColour + ","
+                        + schemeType + ","
+                        + colours);
+                writer.newLine();
+
+                for (Layer layer : canvas.getLayers()) {
+                    if (layer instanceof Drawing) {
+                        Drawing drawing = (Drawing) layer;
+                        writer.write("DRAWING" + ","
+                                + escapeCsv(drawing.getName()) + ","
+                                + drawing.isVisible() + ","
+                                + drawing.getPosition() + ","
+                                + drawing.getTransparency());
+                        writer.newLine();
+
+                        for (Stroke stroke : drawing.getStrokes()) {
+                            List<String> pointStrings = new ArrayList<>();
+                            for (Point2D.Double p : stroke.getPoints()) {
+                                pointStrings.add(p.x + ":" + p.y);
+                            }
+                            String points = String.join(";", pointStrings);
+
+                            writer.write("STROKE,"
+                                    + stroke.getColour() + ","
+                                    + stroke.getWidth() + ","
+                                    + points);
+                            writer.newLine();
+                        }
+                    } else if (layer instanceof Image) {
+                        Image image = (Image) layer;
+                        Path imagePath = IMAGES_DIR.resolve(project.getId() + "_" + image.getPosition() + ".png");
+                        ImageIO.write(image.getEditedImage(), "png", imagePath.toFile());
+
+                        writer.write("IMAGE" + ","
+                                + escapeCsv(image.getName()) + ","
+                                + image.isVisible() + ","
+                                + image.getPosition() + ","
+                                + image.getTransparency() + ","
+                                + escapeCsv(imagePath.toString()
+                        ));
+                        writer.newLine();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return projectPath.toString();
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) {
+            return "";
+        }
+        String sanitized = value.replace("\r\n", " ").replace("\n", " ");
+        if (sanitized.contains(",") || sanitized.contains("\"")) {
+            sanitized = "\"" + sanitized.replace("\"", "\"\"") + "\"";
+        }
+        return sanitized;
+    }
+}
