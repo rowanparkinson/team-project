@@ -1,4 +1,4 @@
-package interface_adapter;
+package interface_adapter.canvas;
 
 import use_case.import_image.ImportImageInputBoundary;
 import use_case.import_image.ImportImageInputData;

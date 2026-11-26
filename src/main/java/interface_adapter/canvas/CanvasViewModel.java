@@ -1,6 +1,5 @@
-package interface_adapter;
+package interface_adapter.canvas;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

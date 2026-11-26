@@ -1,9 +1,9 @@
 package view;
 
-import interface_adapter.CanvasController;
-import interface_adapter.CanvasState;
-import interface_adapter.CanvasViewModel;
-import interface_adapter.CanvasViewModelListener;
+import interface_adapter.canvas.CanvasController;
+import interface_adapter.canvas.CanvasState;
+import interface_adapter.canvas.CanvasViewModel;
+import interface_adapter.canvas.CanvasViewModelListener;
 
 import javax.swing.*;
 import java.awt.*;
