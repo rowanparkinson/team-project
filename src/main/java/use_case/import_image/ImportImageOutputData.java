@@ -1,15 +1,15 @@
 package use_case.import_image;
 
-import entity.Image;
+import entity.Canvas;
 
 public class ImportImageOutputData {
-    private final Image importedImage;
+    private final Canvas updatedCanvas;
 
-    public ImportImageOutputData(Image image) {
-        this.importedImage = image;
+    public ImportImageOutputData(Canvas updatedCanvas) {
+        this.updatedCanvas = updatedCanvas;
     }
 
-    public Image getImage() {
-        return importedImage;
+    public Canvas getUpdatedCanvas() {
+        return updatedCanvas;
     }
 }

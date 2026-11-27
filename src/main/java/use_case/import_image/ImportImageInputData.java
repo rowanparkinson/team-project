@@ -4,14 +4,14 @@ import java.io.File;
 
 public class ImportImageInputData {
     private final File selectedFile;
-    private final long currentProjectId;
+    private final String currentProjectId;
 
-    public ImportImageInputData(File selectedFile, long currentProjectId) {
+    public ImportImageInputData(File selectedFile, String currentProjectId) {
         this.selectedFile = selectedFile;
         this.currentProjectId = currentProjectId;
     }
 
-    long getProjectID() { return currentProjectId; }
+    String getProjectID() { return currentProjectId; }
 
     File getSelectedFile() { return selectedFile; }
 }

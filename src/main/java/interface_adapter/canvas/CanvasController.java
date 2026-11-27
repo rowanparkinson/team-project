@@ -15,7 +15,7 @@ public class CanvasController {
         this.importImageUseCaseInteractor = importImageUseCaseInteractor;
     }
 
-    public void importImage(File selectedFile, long currentProjectId) {
+    public void importImage(File selectedFile, String currentProjectId) {
         ImportImageInputData inputData = new ImportImageInputData(selectedFile, currentProjectId);
         importImageUseCaseInteractor.execute(inputData);
     }
