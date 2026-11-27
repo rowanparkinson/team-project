@@ -1,19 +1,21 @@
-package interface_adapter.canvas;
+package interface_adapter.import_image;
 
+import interface_adapter.canvas.CanvasState;
+import interface_adapter.canvas.CanvasViewModel;
 import use_case.import_image.ImportImageOutputBoundary;
 import use_case.import_image.ImportImageOutputData;
 
-public class CanvasPresenter implements ImportImageOutputBoundary {
+public class ImportImagePresenter implements ImportImageOutputBoundary {
 
     private final CanvasViewModel canvasViewModel;
 
-    public CanvasPresenter(CanvasViewModel canvasViewModel) {
+    public ImportImagePresenter(CanvasViewModel canvasViewModel) {
         this.canvasViewModel = canvasViewModel;
     }
 
 
     @Override
-    public void prepareImportImageSuccessView(ImportImageOutputData outputData) {
+    public void prepareSuccessView(ImportImageOutputData outputData) {
         final CanvasState canvasState = canvasViewModel.getState();
         canvasState.setCanvas(outputData.getUpdatedCanvas());
         canvasState.setErrorMessage("");
@@ -21,7 +23,7 @@ public class CanvasPresenter implements ImportImageOutputBoundary {
     }
 
     @Override
-    public void prepareImportImageFailView(String errorMessage) {
+    public void prepareFailView(String errorMessage) {
         final CanvasState canvasState = canvasViewModel.getState();
         canvasState.setErrorMessage(errorMessage);
         canvasViewModel.notifyStateChanged();

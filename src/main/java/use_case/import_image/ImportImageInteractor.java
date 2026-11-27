@@ -27,7 +27,7 @@ public class ImportImageInteractor implements ImportImageInputBoundary {
         String projectId = inputData.getProjectID();
 
         if (!imageDataAccessObject.isValidImage(selectedFile)) {
-            importImagePresenter.prepareImportImageFailView("Invalid image file.");
+            importImagePresenter.prepareFailView("Invalid image file.");
         }
 
         else {
@@ -45,10 +45,10 @@ public class ImportImageInteractor implements ImportImageInputBoundary {
                 currentProject.getCanvas().addLayer(image);
 
                 ImportImageOutputData outputData = new ImportImageOutputData(currentProject.getCanvas());
-                importImagePresenter.prepareImportImageSuccessView(outputData);
+                importImagePresenter.prepareSuccessView(outputData);
 
             } catch (IOException e) {
-                importImagePresenter.prepareImportImageFailView("Failed to read or save image file.");
+                importImagePresenter.prepareFailView("Failed to read or save image file.");
             }
         }
     }

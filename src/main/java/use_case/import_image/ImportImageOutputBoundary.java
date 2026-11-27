@@ -2,7 +2,7 @@ package use_case.import_image;
 
 public interface ImportImageOutputBoundary {
 
-    void prepareImportImageSuccessView(ImportImageOutputData outputData);
+    void prepareSuccessView(ImportImageOutputData outputData);
 
-    void prepareImportImageFailView(String errorMessage);
+    void prepareFailView(String errorMessage);
 }

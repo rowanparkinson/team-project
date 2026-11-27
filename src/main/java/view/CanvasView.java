@@ -3,7 +3,7 @@ package view;
 import entity.Canvas;
 import entity.Image;
 import entity.Layer;
-import interface_adapter.canvas.CanvasController;
+import interface_adapter.import_image.ImportImageController;
 import interface_adapter.canvas.CanvasState;
 import interface_adapter.canvas.CanvasViewModel;
 import interface_adapter.canvas.CanvasViewModelListener;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CanvasView extends JPanel implements ActionListener, CanvasViewModelListener {
 
     private final CanvasViewModel canvasViewModel;
-    private CanvasController canvasController = null;
+    private ImportImageController importImageController = null;
 
     // Main panels
     private final JPanel topPanel = new JPanel();
@@ -203,7 +203,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 final CanvasState currentState = canvasViewModel.getState();
-                canvasController.importImage(selectedFile, currentState.getProjectId());
+                importImageController.execute(selectedFile, currentState.getProjectId());
             }
 
         } else if (source == searchButton) {
@@ -227,8 +227,8 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
         }
     }
 
-    public void setCanvasController(CanvasController canvasController) {
-        this.canvasController = canvasController;
+    public void setImportImageController(ImportImageController importImageController) {
+        this.importImageController = importImageController;
     }
 
     @Override
