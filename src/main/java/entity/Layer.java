@@ -1,12 +1,14 @@
+
 package entity;
+
 import java.util.UUID;
 
 public abstract class Layer {
 
     private String name;
     private boolean visible;
-    private double x;
-    private double y;
+    private double x; // Horizontal position
+    private double y; // Vertical position
     private double transparency;
     private String layerId;
 
@@ -35,15 +37,26 @@ public abstract class Layer {
         this.visible = !this.visible;
     }
 
+    // X coordinate
     public double getX() {
         return x;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    // Y coordinate
     public double getY() {
         return y;
     }
 
-    public void setPosition(double x, double y) {
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    // Update both coordinates
+    public void setCoordinates(double x, double y) {
         this.x = x;
         this.y = y;
     }
