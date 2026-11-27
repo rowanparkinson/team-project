@@ -1,5 +1,8 @@
 package view;
 
+import entity.Canvas;
+import entity.Image;
+import entity.Layer;
 import interface_adapter.canvas.CanvasController;
 import interface_adapter.canvas.CanvasState;
 import interface_adapter.canvas.CanvasViewModel;
@@ -17,7 +20,6 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
 
     private final CanvasViewModel canvasViewModel;
     private CanvasController canvasController = null;
-    // private
 
     // Main panels
     private final JPanel topPanel = new JPanel();
@@ -231,6 +233,52 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
 
     @Override
     public void stateChanged() {
-        // Add logic
+        CanvasState canvasState = canvasViewModel.getState();
+        updateErrorMessage(canvasState);
+        canvasPanel.repaint();
+        updateLayerPanel(canvasState);
     }
+
+    private void updateLayerPanel(CanvasState canvasState) {
+        layerModel.clear();
+        Canvas canvas = canvasState.getCanvas();
+        for (Layer layer : canvas.getLayers()) {
+            layerModel.addElement(layer.getName());
+        }
+        layerList.setSelectedValue(canvasState.getselectedLayer(), true);
+    }
+
+    private void updateErrorMessage(CanvasState canvasState) {
+        if (canvasState.getErrorMessage() != null
+                && !canvasState.getErrorMessage().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    canvasState.getErrorMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            canvasState.setErrorMessage("");
+        }
+    }
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        CanvasState currentState = canvasViewModel.getState();
+        Canvas canvas = currentState.getCanvas();
+
+        for (Layer layer : canvas.getLayers()) {
+            if (layer instanceof Image && layer.isVisible()) {
+                Image image = (Image) layer;
+                g.drawImage(
+                        image.getEditedImage(),
+                        image.getX(),
+                        image.getY(),
+                        image.getEditedImage().getWidth(),
+                        image.getEditedImage().getHeight(),
+                        this
+                );}}}
 }
