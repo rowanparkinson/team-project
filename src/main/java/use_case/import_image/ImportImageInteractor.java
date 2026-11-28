@@ -10,14 +10,17 @@ import java.nio.file.Path;
 
 public class ImportImageInteractor implements ImportImageInputBoundary {
     private final ImportImageDataAccessInterface imageDataAccessObject;
-    private final LocalDataAccessInterface localDataAccessObject;
+    private final LoadedProjectDataAccessInterface loadedProjectDataAccessObject;
+    private final EditHistory editHistory;
     private final ImportImageOutputBoundary importImagePresenter;
 
     public ImportImageInteractor(ImportImageDataAccessInterface imageDataAccessObject,
-                                 LocalDataAccessInterface localDataAccessObject,
+                                 LoadedProjectDataAccessInterface loadedProjectDataAccessObject,
+                                 EditHistory editHistory,
                                  ImportImageOutputBoundary presenter) {
         this.imageDataAccessObject = imageDataAccessObject;
-        this.localDataAccessObject = localDataAccessObject;
+        this.loadedProjectDataAccessObject = loadedProjectDataAccessObject;
+        this.editHistory = editHistory;
         this.importImagePresenter = presenter;
     }
 
@@ -36,13 +39,14 @@ public class ImportImageInteractor implements ImportImageInputBoundary {
                 Path imagePath = imageDataAccessObject.saveImage(loadedImage, projectId);
 
                 // edit findProject if Alex's implementation changes
-                Project currentProject = localDataAccessObject.findProject(projectId);
+                Project currentProject = loadedProjectDataAccessObject.getProject(projectId);
 
                 String imageName = "Layer " + (currentProject.getCanvas().getLayers().size() + 1);
 
                 Image image = new Image(imageName, imagePath.toString(), loadedImage);
 
-                currentProject.getCanvas().addLayer(image);
+                CreateLayerCommand command = new CreateLayerCommand(currentProject.getCanvas(), image);
+                editHistory.executeCommand(command);
 
                 ImportImageOutputData outputData = new ImportImageOutputData(currentProject.getCanvas());
                 importImagePresenter.prepareSuccessView(outputData);
