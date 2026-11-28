@@ -1,21 +1,21 @@
-package interface_adapter;
+package interface_adapter.import_image;
 
 import use_case.import_image.ImportImageInputBoundary;
 import use_case.import_image.ImportImageInputData;
 
 import java.io.File;
 
-public class CanvasController {
+public class ImportImageController {
 
     // Add more input boundaries (corresponding to other use cases) as needed
     private final ImportImageInputBoundary importImageUseCaseInteractor;
 
     // Add more parameters as needed
-    public CanvasController(ImportImageInputBoundary importImageUseCaseInteractor) {
+    public ImportImageController(ImportImageInputBoundary importImageUseCaseInteractor) {
         this.importImageUseCaseInteractor = importImageUseCaseInteractor;
     }
 
-    public void importImage(File selectedFile, long currentProjectId) {
+    public void execute(File selectedFile, String currentProjectId) {
         ImportImageInputData inputData = new ImportImageInputData(selectedFile, currentProjectId);
         importImageUseCaseInteractor.execute(inputData);
     }

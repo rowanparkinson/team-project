@@ -1,9 +1,12 @@
 package view;
 
-import interface_adapter.CanvasController;
-import interface_adapter.CanvasState;
-import interface_adapter.CanvasViewModel;
-import interface_adapter.CanvasViewModelListener;
+import entity.Canvas;
+import entity.Image;
+import entity.Layer;
+import interface_adapter.import_image.ImportImageController;
+import interface_adapter.canvas.CanvasState;
+import interface_adapter.canvas.CanvasViewModel;
+import interface_adapter.canvas.CanvasViewModelListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,15 +19,14 @@ import java.util.List;
 public class CanvasView extends JPanel implements ActionListener, CanvasViewModelListener {
 
     private final CanvasViewModel canvasViewModel;
-    private CanvasController canvasController = null;
-    // private
+    private ImportImageController importImageController = null;
 
     // Main panels
     private final JPanel topPanel = new JPanel();
     private final JPanel toolbarPanel = new JPanel();
     private final JPanel sidebarPanel = new JPanel();
     private final JPanel bottomPanel = new JPanel();
-    private final JPanel canvasPanel = new JPanel();
+    private final JPanel canvasPanel = new DrawingPanel();
 
     // Top bar
     private final JButton homeButton = new JButton("Home");
@@ -201,7 +203,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 final CanvasState currentState = canvasViewModel.getState();
-                canvasController.importImage(selectedFile, currentState.getProjectId());
+                importImageController.execute(selectedFile, currentState.getProjectId());
             }
 
         } else if (source == searchButton) {
@@ -225,12 +227,62 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
         }
     }
 
-    public void setCanvasController(CanvasController canvasController) {
-        this.canvasController = canvasController;
+    public void setImportImageController(ImportImageController importImageController) {
+        this.importImageController = importImageController;
     }
 
     @Override
     public void stateChanged() {
-        // Add logic
+        CanvasState canvasState = canvasViewModel.getState();
+        updateErrorMessage(canvasState);
+        canvasPanel.repaint();
+        updateLayerPanel(canvasState);
     }
+
+    private void updateLayerPanel(CanvasState canvasState) {
+        layerModel.clear();
+        Canvas canvas = canvasState.getCanvas();
+        for (Layer layer : canvas.getLayers()) {
+            layerModel.addElement(layer.getName());
+        }
+        layerList.setSelectedValue(canvasState.getselectedLayer(), true);
+    }
+
+    private void updateErrorMessage(CanvasState canvasState) {
+        if (canvasState.getErrorMessage() != null
+                && !canvasState.getErrorMessage().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    canvasState.getErrorMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            canvasState.setErrorMessage("");
+        }
+    }
+
+private class DrawingPanel extends JPanel {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        CanvasState currentState = canvasViewModel.getState();
+        Canvas canvas = currentState.getCanvas();
+
+        for (Layer layer : canvas.getLayers()) {
+            if (layer instanceof Image && layer.isVisible()) {
+                Image image = (Image) layer;
+                g.drawImage(
+                        image.getEditedImage(),
+                        image.getX(),
+                        image.getY(),
+                        image.getEditedImage().getWidth(),
+                        image.getEditedImage().getHeight(),
+                        this
+                );
+            }
+        }
+    }
+}
 }
