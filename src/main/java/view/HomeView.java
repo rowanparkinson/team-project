@@ -94,23 +94,17 @@ public class HomeView extends JPanel implements ActionListener, HomeViewModelLis
         for (Project project : user.getMyProjects()) {
             JButton projectButton = new JButton(project.getName());
             projectButton.setActionCommand("openProject:" + project.getId());
-            // Make the button look like a block
+
+            projectButton.addActionListener(this);
+
+            // Adjust button preview
             projectButton.setPreferredSize(new Dimension(200, 75));
-            projectButton.setMaximumSize(
-                    new Dimension(Integer.MAX_VALUE, 75)
-            );
-
-            // Align text to the left
+            projectButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 75));
             projectButton.setHorizontalAlignment(SwingConstants.LEFT);
-
-            // Add padding around the text
-            projectButton.setBorder(
-                    BorderFactory.createCompoundBorder(
+            projectButton.setBorder(BorderFactory.createCompoundBorder(
                             BorderFactory.createLineBorder(Color.LIGHT_GRAY),
                             BorderFactory.createEmptyBorder(10, 20, 10, 20)
-                    )
-            );
-
+                    ));
             projectButton.setBackground(Color.WHITE);
             projectButton.setOpaque(true);
             projectButton.setForeground(Color.BLACK);
@@ -119,15 +113,37 @@ public class HomeView extends JPanel implements ActionListener, HomeViewModelLis
 
             projectListPanel.add(projectButton);
             projectListPanel.add(Box.createVerticalStrut(10));
-
         }
-
         projectListPanel.revalidate();
         projectListPanel.repaint();
     }
 
     private void initializeActionListeners() {
+        logoutButton.addActionListener(this);
+        createProjectButton.addActionListener(this);
+        exploreCommunityButton.addActionListener(this);
+    }
 
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == logoutButton) {
+            // Connect to login/logout use case
+
+        } else if (source == createProjectButton) {
+            // Connect to create project use case
+
+        } else if (source == exploreCommunityButton) {
+            // Connect to explore community use case
+
+        } else if (source instanceof JButton) {
+            // Extract the project ID from the button
+            JButton projectButton = (JButton) source;
+            String projectId = projectButton.getActionCommand().substring("openProject:".length());
+
+            // Connect to open project use case
+        }
     }
 
     @Override
@@ -135,8 +151,4 @@ public class HomeView extends JPanel implements ActionListener, HomeViewModelLis
         updateProjectList();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 }
