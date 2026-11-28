@@ -9,13 +9,13 @@ public abstract class Layer {
     private int x = 0;
     private int y = 0;
     private double transparency;
-    private String id;
+    private String layerId;
 
     public Layer(String name) {
         this.name = name;
         this.visible = true;
         this.transparency = 1.0;
-        this.id = UUID.randomUUID().toString();
+        this.layerId = UUID.randomUUID().toString();
     }
 
     public Layer(String name, int x, int y) {
@@ -59,6 +59,11 @@ public abstract class Layer {
         this.y = y;
     }
 
+    public void setPosition(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public double getTransparency() {
         return transparency;
     }
@@ -73,7 +78,7 @@ public abstract class Layer {
         this.transparency = transparency;
     }
 
-    public String getId() {
-        return id;
+    public String getLayerId() {
+        return layerId;
     }
 }

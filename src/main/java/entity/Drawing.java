@@ -16,7 +16,7 @@ public class Drawing extends Layer {
     }
 
     public String getDrawingId() {
-        return getId();
+        return getLayerId();
     }
 
     public List<Stroke> getStrokes() {

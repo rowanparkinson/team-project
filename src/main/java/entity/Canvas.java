@@ -52,7 +52,7 @@ public class Canvas {
 
     public void resize(int width, int height){
         if (width <= 0 || height <= 0) {
-            throw new IllegalArgumentException("Canvas dimensions must be positive");
+           throw new IllegalArgumentException("Canvas dimensions must be positive");
         }
         this.width = width;
         this.height = height;

@@ -54,6 +54,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
     private final JButton saveButton = new JButton("Save");
     private final JButton publishButton = new JButton("Publish");
 
+
     public CanvasView(CanvasViewModel canvasViewModel) {
         this.canvasViewModel = canvasViewModel;
         canvasViewModel.addListener(this);
@@ -196,7 +197,14 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             // Redo last action
 
         } else if (source == importButton) {
-            // Import image
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                final CanvasState currentState = canvasViewModel.getState();
+                canvasController.importImage(selectedFile, currentState.getProjectId());
+            }
+
         } else if (source == searchButton) {
             // Open image search
         } else if (source == selectButton) {

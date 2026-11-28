@@ -47,4 +47,5 @@ public class CanvasState {
 
     public Color getCanvasColour() {return canvasColour;}
     public void setCanvasColour(Color colour) {this.canvasColour = colour;}
+
 }
