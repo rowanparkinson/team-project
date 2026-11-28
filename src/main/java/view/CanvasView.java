@@ -4,6 +4,8 @@ import interface_adapter.CanvasController;
 import interface_adapter.CanvasState;
 import interface_adapter.CanvasViewModel;
 import interface_adapter.CanvasViewModelListener;
+import interface_adapter.free_draw.FreeDrawController;
+import interface_adapter.free_draw.FreeDrawViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +26,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
     private final JPanel toolbarPanel = new JPanel();
     private final JPanel sidebarPanel = new JPanel();
     private final JPanel bottomPanel = new JPanel();
-    private final JPanel canvasPanel = new JPanel();
+    private final DrawingPanel canvasPanel;
 
     // Top bar
     private final JButton homeButton = new JButton("Home");
@@ -54,9 +56,10 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
     private final JButton publishButton = new JButton("Publish");
 
 
-    public CanvasView(CanvasViewModel canvasViewModel) {
+    public CanvasView(CanvasViewModel canvasViewModel, FreeDrawViewModel freeDrawViewModel) {
         this.canvasViewModel = canvasViewModel;
         canvasViewModel.addListener(this);
+        this.canvasPanel = new DrawingPanel(freeDrawViewModel);
 
         setLayout(new BorderLayout());
 
@@ -201,19 +204,23 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 final CanvasState currentState = canvasViewModel.getState();
-                canvasController.importImage(selectedFile, currentState.getProjectId());
+//                canvasController.importImage(selectedFile, currentState.getProjectId()); // Uncomment when Import image use case is implemented
             }
 
         } else if (source == searchButton) {
             // Open image search
         } else if (source == selectButton) {
             // Switch to select tool
+            canvasPanel.setDrawingEnabled(false);
         } else if (source == drawButton) {
             // Switch to brush tool
+            canvasPanel.setDrawingEnabled(true);
         } else if (source == shapeButton) {
             // Switch to shape tool
+            canvasPanel.setDrawingEnabled(false);
         } else if (source == eraserButton) {
             // Switch to eraser tool
+            canvasPanel.setDrawingEnabled(false);
         } else if (source == createPaletteButton) {
             // Open colour palette dialog
         } else if (source == saveButton) {
@@ -227,6 +234,10 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
 
     public void setCanvasController(CanvasController canvasController) {
         this.canvasController = canvasController;
+    }
+
+    public void setFreeDrawController(FreeDrawController freeDrawController) {
+        canvasPanel.setFreeDrawController(freeDrawController);
     }
 
     @Override
