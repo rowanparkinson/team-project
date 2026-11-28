@@ -201,7 +201,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 final CanvasState currentState = canvasViewModel.getState();
-                canvasController.importImage(selectedFile, currentState.getProjectId());
+                //canvasController.importImage(selectedFile, currentState.getProjectId());
             }
 
         } else if (source == searchButton) {
