@@ -19,9 +19,13 @@ import java.util.*;
  */
 public class SavedProjectsDataAccess implements LocalDataAccessInterface {
     private static final Path LOCAL_PROJECTS_CSV = Paths.get("local_data/projects.csv");
+    private LoadedProjectDataAccess loadedProjectDataAccess;
 
     @Override
     public Project findProject(String projectId) {
+        if (!loadedProjectDataAccess.containsProject(projectId)) {
+            return loadedProjectDataAccess.getProject(projectId);
+        }
         Map<String, Project> projects = readData();
         return projects.get(projectId);
     }
@@ -187,5 +191,9 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
         }
         imageLayer.adjustTransparency(transparency);
         return imageLayer;
+    }
+
+    public void setLoadedProjectDataAccess(LoadedProjectDataAccess loadedProjectDataAccess) {
+        this.loadedProjectDataAccess = loadedProjectDataAccess;
     }
 }

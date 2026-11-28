@@ -1,4 +1,4 @@
-package use_case.publish_project;
+package use_case;
 
 import entity.Project;
 

@@ -1,7 +1,7 @@
 package data_access;
 
 import entity.Project;
-import use_case.publish_project.LoadedProjectDataAccessInterface;
+import use_case.LoadedProjectDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;

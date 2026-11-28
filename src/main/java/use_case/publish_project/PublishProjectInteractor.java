@@ -1,6 +1,7 @@
 package use_case.publish_project;
 
 import entity.Project;
+import use_case.LoadedProjectDataAccessInterface;
 
 /**
  * The Publishing Project Interactor.
@@ -8,7 +9,6 @@ import entity.Project;
 public class PublishProjectInteractor implements PublishProjectInputBoundary {
     private final LocalDataAccessInterface localDataAccessObject;
     private final CommunityDataAccessInterface communityDataAccessObject;
-    private final LoadedProjectDataAccessInterface loadedProjectDataAccessObject;
     private final PublishProjectOutputBoundary publishProjectPresenter;
 
     public PublishProjectInteractor(LocalDataAccessInterface localDataAccessInterface,
@@ -17,7 +17,6 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
                                     PublishProjectOutputBoundary publishProjectOutputBoundary) {
         this.localDataAccessObject = localDataAccessInterface;
         this.communityDataAccessObject = communityDataAccessInterface;
-        this.loadedProjectDataAccessObject = loadedProjectDataAccessInterface;
         this.publishProjectPresenter = publishProjectOutputBoundary;
     }
 
@@ -28,14 +27,7 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
         } else if (inputData.getDescription() == null || inputData.getDescription().isBlank()) {
             publishProjectPresenter.prepareFailView("Description cannot be empty.");
         } else {
-            Project project = null;
-            if (loadedProjectDataAccessObject.containsProject(inputData.getId())) {
-                project = loadedProjectDataAccessObject.getProject(inputData.getId());
-            }
-            else
-            {
-                project = getProject(inputData.getId());
-            }
+            Project project = getProject(inputData.getId());
 
             if (project == null) {
                 publishProjectPresenter.prepareFailView("No projects has been found.");
