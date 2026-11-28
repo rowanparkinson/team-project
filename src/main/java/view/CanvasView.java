@@ -197,6 +197,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             // Redo last action
 
         } else if (source == importButton) {
+            // Import image
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
