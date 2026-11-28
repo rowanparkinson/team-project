@@ -24,7 +24,7 @@ public abstract class Layer {
         this.transparency = 1.0;
         this.x = x;
         this.y = y;
-        this.id = UUID.randomUUID().toString();
+        this.layerId = UUID.randomUUID().toString();
     }
 
     public String getName() {
@@ -59,7 +59,7 @@ public abstract class Layer {
         this.y = y;
     }
 
-    public void setPosition(double x, double y) {
+    public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
