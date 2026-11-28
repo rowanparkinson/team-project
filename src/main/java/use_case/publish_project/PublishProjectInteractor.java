@@ -1,7 +1,6 @@
 package use_case.publish_project;
 
 import entity.Project;
-import use_case.LoadedProjectDataAccessInterface;
 
 /**
  * The Publishing Project Interactor.
@@ -13,7 +12,6 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
 
     public PublishProjectInteractor(LocalDataAccessInterface localDataAccessInterface,
                                     CommunityDataAccessInterface communityDataAccessInterface,
-                                    LoadedProjectDataAccessInterface loadedProjectDataAccessInterface,
                                     PublishProjectOutputBoundary publishProjectOutputBoundary) {
         this.localDataAccessObject = localDataAccessInterface;
         this.communityDataAccessObject = communityDataAccessInterface;

@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.*;
+import use_case.LoadedProjectDataAccessInterface;
 import use_case.publish_project.LocalDataAccessInterface;
 
 import javax.imageio.ImageIO;
@@ -17,17 +18,21 @@ import java.util.*;
 /**
  * DAO for project data implemented using a File to fetch the data.
  */
-public class SavedProjectsDataAccess implements LocalDataAccessInterface {
+public class SavedProjectsDataAccess implements LocalDataAccessInterface, LoadedProjectDataAccessInterface {
     private static final Path LOCAL_PROJECTS_CSV = Paths.get("local_data/projects.csv");
-    private LoadedProjectDataAccess loadedProjectDataAccess;
+    private final Map<String, Project> loadedProjects = new HashMap<>();
 
     @Override
     public Project findProject(String projectId) {
-        if (!loadedProjectDataAccess.containsProject(projectId)) {
-            return loadedProjectDataAccess.getProject(projectId);
+        if (containsProject(projectId)) {
+            return getProject(projectId);
         }
         Map<String, Project> projects = readData();
-        return projects.get(projectId);
+        Project project = projects.get(projectId);
+        if (project != null) {
+            saveProject(project);
+        }
+        return project;
     }
 
     private Map<String, Project> readData() {
@@ -193,7 +198,23 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
         return imageLayer;
     }
 
-    public void setLoadedProjectDataAccess(LoadedProjectDataAccess loadedProjectDataAccess) {
-        this.loadedProjectDataAccess = loadedProjectDataAccess;
+    @Override
+    public Project getProject(String projectId) {
+        return loadedProjects.get(projectId);
+    }
+
+    @Override
+    public boolean containsProject(String projectId) {
+        return loadedProjects.containsKey(projectId);
+    }
+
+    @Override
+    public void saveProject(Project project) {
+        loadedProjects.put(project.getId(), project);
+    }
+
+    @Override
+    public void unloadProject(String projectId) {
+        loadedProjects.remove(projectId);
     }
 }
