@@ -8,13 +8,16 @@ import entity.Project;
 public class PublishProjectInteractor implements PublishProjectInputBoundary {
     private final LocalDataAccessInterface localDataAccessObject;
     private final CommunityDataAccessInterface communityDataAccessObject;
+    private final LoadedProjectDataAccessInterface loadedProjectDataAccessObject;
     private final PublishProjectOutputBoundary publishProjectPresenter;
 
     public PublishProjectInteractor(LocalDataAccessInterface localDataAccessInterface,
                                     CommunityDataAccessInterface communityDataAccessInterface,
+                                    LoadedProjectDataAccessInterface loadedProjectDataAccessInterface,
                                     PublishProjectOutputBoundary publishProjectOutputBoundary) {
         this.localDataAccessObject = localDataAccessInterface;
         this.communityDataAccessObject = communityDataAccessInterface;
+        this.loadedProjectDataAccessObject = loadedProjectDataAccessInterface;
         this.publishProjectPresenter = publishProjectOutputBoundary;
     }
 
@@ -25,12 +28,17 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
         } else if (inputData.getDescription() == null || inputData.getDescription().isBlank()) {
             publishProjectPresenter.prepareFailView("Description cannot be empty.");
         } else {
-            Project project = getProject(inputData.getId());
+            Project project = null;
+            if (loadedProjectDataAccessObject.containsProject(inputData.getId())) {
+                project = loadedProjectDataAccessObject.getProject(inputData.getId());
+            }
+            else
+            {
+                project = getProject(inputData.getId());
+            }
 
             if (project == null) {
-                publishProjectPresenter.prepareFailView("No projects has been found in saved files.");
-            } else if (project.getIsPublished()) {
-                publishProjectPresenter.prepareFailView("Project is already published.");
+                publishProjectPresenter.prepareFailView("No projects has been found.");
             } else {
                 if (project.getIsPublished()) {
                     republishProject(project, inputData.getId(), inputData.getName(), inputData.getDescription());
