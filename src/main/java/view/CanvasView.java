@@ -26,7 +26,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
     private final JPanel toolbarPanel = new JPanel();
     private final JPanel sidebarPanel = new JPanel();
     private final JPanel bottomPanel = new JPanel();
-    private final JPanel canvasPanel = new JPanel();
+    private final JPanel canvasPanel = new DrawingPanel();
 
     // Top bar
     private final JButton homeButton = new JButton("Home");
@@ -262,7 +262,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
         }
     }
 
-
+private class DrawingPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -280,5 +280,9 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
                         image.getEditedImage().getWidth(),
                         image.getEditedImage().getHeight(),
                         this
-                );}}}
+                );
+            }
+        }
+    }
+}
 }
