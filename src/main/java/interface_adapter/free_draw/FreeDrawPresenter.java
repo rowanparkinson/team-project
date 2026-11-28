@@ -17,7 +17,7 @@ public class FreeDrawPresenter implements FreeDrawOutputBoundary {
     @Override
     public void prepareSuccessView(FreeDrawOutputData outputData) {
         final FreeDrawState freeDrawState = freeDrawViewModel.getState();
-        freeDrawState.setLastStroke(outputData.getColour(), outputData.getWidth(), outputData.getPoints());
+        freeDrawState.addDrawnStroke(outputData.getColour(), outputData.getWidth(), outputData.getPoints());
         freeDrawState.setHasUnsavedChanges(true);
         freeDrawState.setError(null);
         freeDrawViewModel.notifyStateChanged();

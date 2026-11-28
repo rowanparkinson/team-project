@@ -2,6 +2,7 @@ package interface_adapter.free_draw;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,10 +14,8 @@ public class FreeDrawState {
     private String currentColour = "#000000";
     private double currentWidth = 3.0;
 
-    // The stroke that was just added, so the View can paint it
-    private String lastStrokeColour;
-    private double lastStrokeWidth;
-    private List<Point2D.Double> lastStrokePoints = new ArrayList<>();
+    // Every stroke that has been drawn
+    private final List<DrawnStroke> drawnStrokes = new ArrayList<>();
 
     private boolean hasUnsavedChanges;
     private String error;
@@ -45,22 +44,12 @@ public class FreeDrawState {
         this.currentWidth = currentWidth;
     }
 
-    public String getLastStrokeColour() {
-        return lastStrokeColour;
+    public List<DrawnStroke> getDrawnStrokes() {
+        return Collections.unmodifiableList(drawnStrokes);
     }
 
-    public double getLastStrokeWidth() {
-        return lastStrokeWidth;
-    }
-
-    public List<Point2D.Double> getLastStrokePoints() {
-        return lastStrokePoints;
-    }
-
-    public void setLastStroke(String colour, double width, List<Point2D.Double> points) {
-        this.lastStrokeColour = colour;
-        this.lastStrokeWidth = width;
-        this.lastStrokePoints = new ArrayList<>(points);
+    public void addDrawnStroke(String colour, double width, List<Point2D.Double> points) {
+        drawnStrokes.add(new DrawnStroke(colour, width, points));
     }
 
     public boolean hasUnsavedChanges() {
@@ -77,5 +66,32 @@ public class FreeDrawState {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    /**
+     * The display data for one stroke
+     */
+    public static class DrawnStroke {
+        private final String colour;
+        private final double width;
+        private final List<Point2D.Double> points;
+
+        public DrawnStroke(String colour, double width, List<Point2D.Double> points) {
+            this.colour = colour;
+            this.width = width;
+            this.points = new ArrayList<>(points);
+        }
+
+        public String getColour() {
+            return colour;
+        }
+
+        public double getWidth() {
+            return width;
+        }
+
+        public List<Point2D.Double> getPoints() {
+            return Collections.unmodifiableList(points);
+        }
     }
 }
