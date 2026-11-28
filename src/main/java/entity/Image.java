@@ -15,10 +15,21 @@ public class Image extends Layer {
     private String editedImagePath;
 
 
-    public Image(String name, int position, String originalImagePath,
+    public Image(String name, String originalImagePath,
                  BufferedImage originalImage) {
 
-        super(name, position);
+        super(name);
+
+        this.originalImagePath = originalImagePath;
+        this.editedImagePath = originalImagePath;
+        this.originalImage = copyImage(originalImage);
+        this.editedImage = copyImage(originalImage);
+    }
+
+    public Image(String name, int x, int y, String originalImagePath,
+                 BufferedImage originalImage) {
+
+        super(name, x, y);
 
         this.originalImagePath = originalImagePath;
         this.editedImagePath = originalImagePath;

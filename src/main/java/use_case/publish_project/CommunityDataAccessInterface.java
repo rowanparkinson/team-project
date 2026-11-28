@@ -15,4 +15,13 @@ public interface CommunityDataAccessInterface {
      * @param description the description of the project to save
      */
     void addToCommunity(Project project, String id, String name, String description);
+
+    /**
+     * Modify the community file and update the project according to its id.
+     * @param project the project to save
+     * @param id the id of the project to save
+     * @param name the name of the project to save
+     * @param description the description of the project to save
+     */
+    void modifyInCommunity(Project project, String id, String name, String description);
 }

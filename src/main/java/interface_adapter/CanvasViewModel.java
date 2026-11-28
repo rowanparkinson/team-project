@@ -26,17 +26,4 @@ public class CanvasViewModel {
             listener.stateChanged();
         }
     }
-
-    public void setTitle(String title) {
-        state.setTitle(title);
-    }
-    public void setCanvasWidth(int width) {
-        state.setCanvasWidth(width);
-    }
-    public void setCanvasHeight(int height) {
-        state.setCanvasHeight(height);
-    }
-    public void setCanvasColour(Color color) {
-        state.setCanvasColour(color);
-    }
 }

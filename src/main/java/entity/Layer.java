@@ -6,15 +6,24 @@ public abstract class Layer {
 
     private String name;
     private boolean visible;
-    private int position;
+    private int x = 0;
+    private int y = 0;
     private double transparency;
     private String id;
 
-    public Layer(String name, int position) {
+    public Layer(String name) {
         this.name = name;
         this.visible = true;
-        this.position = position;
         this.transparency = 1.0;
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public Layer(String name, int x, int y) {
+        this.name = name;
+        this.visible = true;
+        this.transparency = 1.0;
+        this.x = x;
+        this.y = y;
         this.id = UUID.randomUUID().toString();
     }
 
@@ -34,12 +43,20 @@ public abstract class Layer {
         this.visible = !this.visible;
     }
 
-    public int getPosition() {
-        return position;
+    public int getX() {
+        return x;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public double getTransparency() {

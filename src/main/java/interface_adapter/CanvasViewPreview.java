@@ -15,10 +15,12 @@ public class CanvasViewPreview {
 
             // Create a dummy ViewModel
             CanvasViewModel viewModel = new CanvasViewModel();
-            viewModel.setTitle("My Drawing");
-            viewModel.setCanvasWidth(800);
-            viewModel.setCanvasHeight(600);
-            viewModel.setCanvasColour(Color.WHITE);
+            CanvasState canvasState = new CanvasState();
+            canvasState.setTitle("My Drawing");
+            canvasState.setCanvasWidth(800);
+            canvasState.setCanvasHeight(600);
+            canvasState.setCanvasColour(Color.WHITE);
+            viewModel.setState(new CanvasState());
 
             // Create the view
             CanvasView canvasView = new CanvasView(viewModel);

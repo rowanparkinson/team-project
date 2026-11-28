@@ -103,7 +103,7 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
         String name = col[2];
         boolean isPublished = Boolean.parseBoolean(col[3]);
 
-        project = new Project(id, name);
+        project = new Project(name, id);
         if (isPublished && !project.getIsPublished()) {
             project.updateIsPublished();
         }
@@ -115,22 +115,6 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
         int height = Integer.parseInt(col[2]);
         String backgroundColor = col[3];
         return new Canvas(width, height, backgroundColor);
-    }
-
-    private static Image getImageRowInfo(String[] col) throws IOException {
-        String name = col[1];
-        boolean visible = Boolean.parseBoolean(col[2]);
-        int position = Integer.parseInt(col[3]);
-        double transparency = Double.parseDouble(col[4]);
-        String imagePath = col[5];
-
-        BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
-        Image imageLayer = new Image(name, position, imagePath, bufferedImage);
-        if (!visible) {
-            imageLayer.toggleLayer();
-        }
-        imageLayer.adjustTransparency(transparency);
-        return imageLayer;
     }
 
     private static void getPaletteRowInfo(Project project, String[] col) {
@@ -154,12 +138,14 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
 
     private static Drawing getDrawingRowInfo(String[] col, Project project) {
         Drawing currentDrawing;
-        String name = col[1];
-        boolean visible = Boolean.parseBoolean(col[2]);
-        int position = Integer.parseInt(col[3]);
-        double transparency = Double.parseDouble(col[4]);
+        String layerId = col[1];
+        String name = col[2];
+        boolean visible = Boolean.parseBoolean(col[3]);
+        int x = Integer.parseInt(col[4]);
+        int y = Integer.parseInt(col[5]);
+        double transparency = Double.parseDouble(col[6]);
 
-        currentDrawing = new Drawing(name, position);
+        currentDrawing = new Drawing(name, x, y);
         if (!visible) {
             currentDrawing.toggleLayer();
         }
@@ -183,5 +169,23 @@ public class SavedProjectsDataAccess implements LocalDataAccessInterface {
             }
         }
         return stroke;
+    }
+
+    private static Image getImageRowInfo(String[] col) throws IOException {
+        String layerId = col[1];
+        String name = col[2];
+        boolean visible = Boolean.parseBoolean(col[3]);
+        int x = Integer.parseInt(col[4]);
+        int y = Integer.parseInt(col[5]);
+        double transparency = Double.parseDouble(col[6]);
+        String imagePath = col[7];
+
+        BufferedImage bufferedImage = ImageIO.read(new File(imagePath));
+        Image imageLayer = new Image(name, x, y, imagePath, bufferedImage);
+        if (!visible) {
+            imageLayer.toggleLayer();
+        }
+        imageLayer.adjustTransparency(transparency);
+        return imageLayer;
     }
 }

@@ -32,7 +32,12 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
             } else if (project.getIsPublished()) {
                 publishProjectPresenter.prepareFailView("Project is already published.");
             } else {
-                publishProject(project, inputData.getId(), inputData.getName(), inputData.getDescription());
+                if (project.getIsPublished()) {
+                    republishProject(project, inputData.getId(), inputData.getName(), inputData.getDescription());
+                }
+                else {
+                    publishProject(project, inputData.getId(), inputData.getName(), inputData.getDescription());
+                }
 
                 final PublishProjectOutputData outputData = new PublishProjectOutputData(project.getName());
                 publishProjectPresenter.prepareSuccessView(outputData);
@@ -47,5 +52,9 @@ public class PublishProjectInteractor implements PublishProjectInputBoundary {
     private void publishProject(Project project, String id, String name, String description) {
         project.updateIsPublished();
         communityDataAccessObject.addToCommunity(project, id, name, description);
+    }
+
+    private void republishProject(Project project, String id, String name, String description) {
+        communityDataAccessObject.modifyInCommunity(project, id, name, description);
     }
 }

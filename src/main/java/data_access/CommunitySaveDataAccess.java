@@ -5,14 +5,13 @@ import use_case.publish_project.CommunityDataAccessInterface;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.Point2D;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * DAO for project data implemented using a File to convert the data.
@@ -26,6 +25,61 @@ public class CommunitySaveDataAccess implements CommunityDataAccessInterface {
     @Override
     public void addToCommunity(Project project, String id, String name, String description) {
         writeData(project, id, name, description);
+    }
+
+    @Override
+    public void modifyInCommunity(Project project, String id, String name, String description) {
+        if (!Files.exists(COMMUNITY_CSV)) {
+            return;
+        }
+
+        try {
+            List<String> lines = Files.readAllLines(COMMUNITY_CSV);
+            List<String> updatedLines = new ArrayList<>();
+            boolean found = false;
+
+            for (String line : lines) {
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                String[] columns = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+                if (columns.length > 0 && columns[0].equals(id)) {
+                    deleteOldProjectImages(id);
+                    String projectFilePath = convertProjectToWriteable(project);
+                    String updatedRow = id + "," + escapeCsv(name) + ","
+                            + escapeCsv(description) + "," + escapeCsv(projectFilePath);
+                    updatedLines.add(updatedRow);
+                    found = true;
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+
+            if (found) {
+                Files.write(COMMUNITY_CSV, updatedLines);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteOldProjectImages(String projectId) {
+        File imagesFolder = IMAGES_DIR.toFile();
+        File[] files = imagesFolder.listFiles();
+
+        if (files == null) {
+            return;
+        }
+
+        String prefix = projectId + "_";
+        for (File file : files) {
+            String fileName = file.getName();
+            if (fileName.startsWith(prefix) && fileName.endsWith(".png")) {
+                file.delete();
+            }
+        }
     }
 
     private void writeData(Project project, String id, String name, String description) {
@@ -101,9 +155,11 @@ public class CommunitySaveDataAccess implements CommunityDataAccessInterface {
             if (layer instanceof Drawing) {
                 Drawing drawing = (Drawing) layer;
                 writer.write("DRAWING" + ","
+                        + drawing.getId() + ","
                         + escapeCsv(drawing.getName()) + ","
                         + drawing.isVisible() + ","
-                        + drawing.getPosition() + ","
+                        + drawing.getX() + ","
+                        + drawing.getY() + ","
                         + drawing.getTransparency());
                 writer.newLine();
 
@@ -122,13 +178,17 @@ public class CommunitySaveDataAccess implements CommunityDataAccessInterface {
                 }
             } else if (layer instanceof Image) {
                 Image image = (Image) layer;
-                Path imagePath = IMAGES_DIR.resolve(project.getId() + "_" + image.getPosition() + ".png");
+                Path imagePath = IMAGES_DIR.resolve(
+                        project.getId() + "_" + image.getX() + "_" + image.getY() + ".png"
+                );
                 ImageIO.write(image.getEditedImage(), "png", imagePath.toFile());
 
                 writer.write("IMAGE" + ","
+                        + image.getId() + ","
                         + escapeCsv(image.getName()) + ","
                         + image.isVisible() + ","
-                        + image.getPosition() + ","
+                        + image.getX() + ","
+                        + image.getY() + ","
                         + image.getTransparency() + ","
                         + escapeCsv(imagePath.toString()
                 ));

@@ -7,8 +7,12 @@ import java.util.List;
 public class Drawing extends Layer {
     private final List<Stroke> strokes = new ArrayList<>();
 
-    public Drawing(String name, int position) {
-        super(name, position);
+    public Drawing(String name) {
+        super(name);
+    }
+
+    public Drawing(String name, int x, int y) {
+        super(name, x, y);
     }
 
     public String getDrawingId() {

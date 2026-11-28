@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * An entity representing a project. Projects have a id, name, published status, holds canvas and palette.
@@ -13,15 +14,24 @@ public class Project {
     private ColourPalette palette;
 
     /**
-     * Creates a new project with the given non-empty id and name.
-     * @param id the project id
+     * Creates a new project with the given name.
      * @param name the project name
-     * @throws IllegalArgumentException if the id is empty
      */
-    public Project(String id, String name) {
-        if ("".equals(id)) {
-            throw new IllegalArgumentException("id can not be empty");
+    public Project(String name) {
+        this.id = UUID.randomUUID().toString();
+        canvas = new Canvas();
+        isPublished = false;
+        palette = new ColourPalette();
+
+        if (name.isEmpty()) {
+            this.name = "My Project";
         }
+        else {
+            this.name = name;
+        }
+    }
+
+    public Project(String name, String id) {
         this.id = id;
         canvas = new Canvas();
         isPublished = false;
