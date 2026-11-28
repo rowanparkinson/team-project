@@ -6,7 +6,7 @@ import entity.Stroke;
 public class UndoRedoTest {
 
     public static void main(String[] args) {
-        Drawing drawing = new Drawing(1, "Test drawing");
+        Drawing drawing = new Drawing("Test drawing");
         EditHistory history = new EditHistory();
         TestPresenter presenter = new TestPresenter();
 
