@@ -25,4 +25,5 @@ public class CanvasViewModel {
         for (CanvasViewModelListener listener : listeners) {
             listener.stateChanged();
         }
-    }}
+    }
+}

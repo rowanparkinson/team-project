@@ -4,6 +4,7 @@ import interface_adapter.CanvasController;
 import interface_adapter.CanvasState;
 import interface_adapter.CanvasViewModel;
 import interface_adapter.CanvasViewModelListener;
+import interface_adapter.publish_project.PublishProjectController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
 
     private final CanvasViewModel canvasViewModel;
     private CanvasController canvasController = null;
-    // private
+    private PublishProjectController publishProjectController = null;
 
     // Main panels
     private final JPanel topPanel = new JPanel();
@@ -196,6 +197,7 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             // Redo last action
 
         } else if (source == importButton) {
+            // Import image
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
@@ -222,11 +224,38 @@ public class CanvasView extends JPanel implements ActionListener, CanvasViewMode
             // Export project
         } else if (source == publishButton) {
             // Publish project
+            Window parentWindow = SwingUtilities.getWindowAncestor(this);
+            final CanvasState currentState = canvasViewModel.getState();
+
+            JPanel previewPanel = new JPanel();
+            previewPanel.setBackground(currentState.getCanvasColour());
+            previewPanel.setPreferredSize(new Dimension(
+                    currentState.getCanvasWidth(),
+                    currentState.getCanvasHeight()));
+
+            PublishProjectDialogView dialog = new PublishProjectDialogView(
+                    parentWindow,
+                    currentState.getTitle(),
+                    previewPanel
+            );
+            dialog.setVisible(true);
+
+            if (dialog.isPublished()) {
+                publishProjectController.execute(
+                        currentState.getProjectId(),
+                        dialog.getPublishName(),
+                        dialog.getPublishDescription()
+                );
+            }
         }
     }
 
     public void setCanvasController(CanvasController canvasController) {
         this.canvasController = canvasController;
+    }
+
+    public void setPublishProjectController(PublishProjectController publishProjectController) {
+        this.publishProjectController = publishProjectController;
     }
 
     @Override

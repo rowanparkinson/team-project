@@ -1,21 +1,29 @@
 package entity;
+
 import java.util.UUID;
 
 public abstract class Layer {
 
     private String name;
     private boolean visible;
-    private double x;
-    private double y;
+    private int x = 0;
+    private int y = 0;
     private double transparency;
     private String layerId;
 
     public Layer(String name) {
         this.name = name;
         this.visible = true;
-        this.x = 0.0;
-        this.y = 0.0;
         this.transparency = 1.0;
+        this.layerId = UUID.randomUUID().toString();
+    }
+
+    public Layer(String name, int x, int y) {
+        this.name = name;
+        this.visible = true;
+        this.transparency = 1.0;
+        this.x = x;
+        this.y = y;
         this.layerId = UUID.randomUUID().toString();
     }
 
@@ -35,15 +43,23 @@ public abstract class Layer {
         this.visible = !this.visible;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getY() {
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
         return y;
     }
 
-    public void setPosition(double x, double y) {
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }

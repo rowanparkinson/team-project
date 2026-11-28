@@ -11,6 +11,10 @@ public class Drawing extends Layer {
         super(name);
     }
 
+    public Drawing(String name, int x, int y) {
+        super(name, x, y);
+    }
+
     public String getDrawingId() {
         return getLayerId();
     }
